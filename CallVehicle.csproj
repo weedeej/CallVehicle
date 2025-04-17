@@ -472,6 +472,7 @@
 
 	<ItemGroup>
 		<Compile Include="Core.cs" />
+		<Compile Include="VehicleControl\VehicleControl.cs" />
 	</ItemGroup>
 	<PropertyGroup>
 		<S1Dir>D:\Program Files (x86)\Steam\steamapps\common\Schedule I - Copy</S1Dir>
