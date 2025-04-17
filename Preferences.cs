@@ -1,7 +1,5 @@
 ﻿using FluffyUnderware.DevTools.Extensions;
 using MelonLoader;
-using static CallVehicle.Preferences;
-using static ScheduleOne.AvatarFramework.Customization.CharacterCreator;
 public static class PreferenceFields
 {
     public static string ServicePrice = "service_price";
@@ -30,16 +28,14 @@ namespace CallVehicle
             use_cash = new PreferenceEntry() { id = "use_cash", name = "Use cash for transactions", description = "Use cash instead of online balance. default: online balance", value = false }
         };
 
-        private static MelonPreferences_Category category = MelonPreferences.GetCategory("CallVehicle") ?? MelonPreferences.CreateCategory("CallVehicle", "Call Vehicle Preferences");
+        private static MelonPreferences_Category category = MelonPreferences.GetCategory("CallVehicle") ??
+            MelonPreferences.CreateCategory("CallVehicle", "Call Vehicle Preferences");
         public static void Initialize()
         {
-            //MelonPreferences_Category category = MelonPreferences.CreateCategory("CallVehicle", "Call Vehicle Preferences");
             category.SetFilePath("UserData/ChauffeurPrefs.cfg");
             category.LoadFromFile();
 
             System.Reflection.FieldInfo[] properties = typeof(DefaultPreferences).GetFields();
-            MelonLogger.Msg(properties.Length);
-            MelonLogger.Msg(category.Entries.Count);
             if (category.Entries.Count < properties.Length)
             {
                 properties.ForEach(prop =>
