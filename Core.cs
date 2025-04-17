@@ -11,7 +11,7 @@ namespace CallVehicle
 
         public override void OnInitializeMelon()
         {
-            // Initialize the mod
+            Preferences.Initialize();
             MelonLogger.Msg("CallVehicle mod initialized.");
         }
     }
