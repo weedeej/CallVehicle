@@ -472,7 +472,11 @@
 
 	<ItemGroup>
 		<Compile Include="Core.cs" />
+		<Compile Include="Phone\AppUI.cs" />
+		<Compile Include="Phone\GenericApp.cs" />
+		<Compile Include="PhoneAppCreator.cs" />
 		<Compile Include="Preferences.cs" />
+		<Compile Include="ModUtilities.cs" />
 		<Compile Include="VehicleController\VehicleControl.cs" />
 	</ItemGroup>
 	<PropertyGroup>
@@ -480,10 +484,19 @@
 		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Publicizer" Version="2.0.1">
+	  <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Publicize Include="Assembly-CSharp:ScheduleOne.UI.Phone.Awake.Start" />
+		<Publicize Include="Assembly-CSharp:ScheduleOne.UI.Phone.HomeScreen.appIcons" />
+		<Publicize Include="Assembly-CSharp:ScheduleOne.UI.Phone.HomeScreen.canvas" />
+		<Publicize Include="Assembly-CSharp:ScheduleOne.UI.Phone.HomeScreen.appIconContainer" />
+		<Publicize Include="Assembly-CSharp:ScheduleOne.UI.Phone.App" />
+		<Publicize Include="Assembly-CSharp:ScheduleOne.Vehicles.LandVehicle.IsPlayerOwned" /> 
+		<Publicize Include="Assembly-CSharp:ScheduleOne.Vehicles.LandVehicle.MaxSteerAngleOverridden" />
 	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="tasklist | findstr /I &quot;Schedule.*I.exe&quot; &gt;nul &amp;&amp; taskkill /F /IM &quot;Schedule I.exe&quot;&#xD;&#xA;COPY &quot;$(TargetPath)&quot; &quot;$(S1Dir)\Mods&quot;&#xD;&#xA;START &quot;&quot; &quot;$(S1Dir)\Schedule I.exe&quot;" />
