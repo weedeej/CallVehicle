@@ -43,11 +43,7 @@ namespace CallVehicle.Phone
         /// </summary>
         public void InitializeUI(RectTransform container, Action<EntryData?> onEntrySelected, Action onCallVehicle)
         {
-            if (container == null)
-            {
-                MelonLogger.Error("AppUI: Initialization failed - Parent container is null!");
-                return;
-            }
+            if (container == null) return;
             this.parentContainer = container;
             this.entrySelectedCallback = onEntrySelected;
             this.callVehicleCallback = onCallVehicle;
@@ -95,7 +91,7 @@ namespace CallVehicle.Phone
             titleGO.transform.SetParent(topBarGO.transform, false);
             // Use TextMeshProUGUI
             TextMeshProUGUI titleText = titleGO.AddComponent<TextMeshProUGUI>();
-            titleText.text = "Generic App";
+            titleText.text = "Call Vehicle";
             // Font assignment removed - TMP uses Font Assets
             titleText.fontSize = 20;
             titleText.color = textColor;
@@ -158,7 +154,6 @@ namespace CallVehicle.Phone
 
         private void CreateLeftPanel(Transform parent)
         {
-            MelonLogger.Msg("AppUI: CreateLeftPanel - Starting.");
             this.ListViewContent = null;
             GameObject listViewContentGO = null;
             RectTransform contentRect = null;
@@ -166,22 +161,18 @@ namespace CallVehicle.Phone
 
             try
             {
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Creating scrollViewGO...");
                 GameObject scrollViewGO = new GameObject("ListViewScrollView");
-                if (scrollViewGO == null) { MelonLogger.Error("AppUI: CreateLeftPanel - scrollViewGO is NULL after creation!"); return; }
+                if (scrollViewGO == null) return;
 
                 scrollRectTransform = scrollViewGO.GetComponent<RectTransform>();
                 if (scrollRectTransform == null)
                 {
-                    MelonLogger.Msg("AppUI: CreateLeftPanel - Adding RectTransform to scrollViewGO...");
                     scrollRectTransform = scrollViewGO.AddComponent<RectTransform>();
                 }
-                if (scrollRectTransform == null) { MelonLogger.Error("AppUI: CreateLeftPanel - Failed to get/add RectTransform for scrollViewGO!"); return; }
+                if (scrollRectTransform == null) return;
 
                 scrollViewGO.transform.SetParent(parent, false);
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Parented scrollViewGO.");
 
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding Image to scrollViewGO...");
                 Image scrollBg = scrollViewGO.AddComponent<Image>();
                 if (scrollBg == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add Image to scrollViewGO."); else scrollBg.color = panelColor;
 
@@ -192,38 +183,26 @@ namespace CallVehicle.Phone
                 MelonLogger.Msg("AppUI: CreateLeftPanel - Adding LayoutElement to scrollViewGO...");
                 LayoutElement scrollLayout = scrollViewGO.AddComponent<LayoutElement>();
                 if (scrollLayout == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add LayoutElement to scrollViewGO."); else scrollLayout.flexibleWidth = 1;
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Configured ScrollView GO.");
 
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Creating listViewContentGO...");
                 listViewContentGO = new GameObject("ListViewContent");
                 if (listViewContentGO == null) { MelonLogger.Error("AppUI: CreateLeftPanel - listViewContentGO is NULL after creation!"); return; }
 
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding RectTransform to listViewContentGO (BEFORE PARENTING)...");
                 contentRect = listViewContentGO.AddComponent<RectTransform>();
                 if (contentRect == null)
                 {
-                    MelonLogger.Error("AppUI: CreateLeftPanel - Failed to add RectTransform to listViewContentGO!");
                     GameObject.Destroy(listViewContentGO); 
                     return;
                 }
                 else
                 {
-                    MelonLogger.Msg("AppUI: CreateLeftPanel - Added RectTransform to listViewContentGO successfully.");
 
                     contentRect.anchorMin = new Vector2(0, 1); contentRect.anchorMax = new Vector2(1, 1);
                     contentRect.pivot = new Vector2(0.5f, 1); contentRect.sizeDelta = Vector2.zero;
                     contentRect.localScale = Vector3.one;
                 }
 
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Assigning transform to ListViewContent property (BEFORE PARENTING)...");
                 this.ListViewContent = listViewContentGO.transform;
-                MelonLogger.Msg($"AppUI: CreateLeftPanel - Assigned ListViewContent. Is it null NOW? {(this.ListViewContent == null)}");
-
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Parenting listViewContentGO...");
                 listViewContentGO.transform.SetParent(scrollViewGO.transform, false);
-                MelonLogger.Msg($"AppUI: CreateLeftPanel - Parented listViewContentGO. Is ListViewContent null after parenting? {(this.ListViewContent == null)}");
-
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding VerticalLayoutGroup to listViewContentGO...");
                 VerticalLayoutGroup contentLayout = listViewContentGO.AddComponent<VerticalLayoutGroup>();
                 if (contentLayout == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add VerticalLayoutGroup to listViewContentGO.");
                 else
@@ -233,15 +212,9 @@ namespace CallVehicle.Phone
                     contentLayout.childControlWidth = true; contentLayout.childForceExpandHeight = false;
                     contentLayout.childForceExpandWidth = true;
                 }
-                MelonLogger.Msg($"AppUI: CreateLeftPanel - Added VLG. Is ListViewContent null? {(this.ListViewContent == null)}");
-
-
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding ContentSizeFitter to listViewContentGO...");
                 ContentSizeFitter sizeFitter = listViewContentGO.AddComponent<ContentSizeFitter>();
                 if (sizeFitter == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add ContentSizeFitter to listViewContentGO."); else sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-                MelonLogger.Msg($"AppUI: CreateLeftPanel - Added Fitter. Is ListViewContent null? {(this.ListViewContent == null)}");
 
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding ScrollRect to scrollViewGO...");
                 if (contentRect != null && scrollRectTransform != null)
                 {
                     this.ListScrollRect = scrollViewGO.AddComponent<ScrollRect>();
@@ -258,8 +231,6 @@ namespace CallVehicle.Phone
                 {
                     MelonLogger.Error("AppUI: CreateLeftPanel - Cannot add ScrollRect because contentRect or scrollRectTransform is null!");
                 }
-
-                MelonLogger.Msg($"AppUI: CreateLeftPanel - Finished setup. Is ListViewContent null at end? {(this.ListViewContent == null)}");
             }
             catch (Exception ex)
             {
@@ -475,7 +446,6 @@ namespace CallVehicle.Phone
                 MelonLogger.Error("AppUI: Cannot clear list items, ListViewContent is null.");
                 return;
             }
-            MelonLogger.Msg($"AppUI: Clearing list items from {ListViewContent.name}. Child count: {ListViewContent.childCount}"); // Log before clearing
 
             // Destroy existing children
             // Use a loop that accounts for removing items while iterating
@@ -488,7 +458,6 @@ namespace CallVehicle.Phone
                     UnityEngine.Object.Destroy(child.gameObject);
                 }
             }
-            MelonLogger.Msg($"AppUI: Finished clearing list items. Remaining children: {ListViewContent.childCount}"); // Log after clearing
         }
 
         /// <summary>

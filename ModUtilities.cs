@@ -20,5 +20,12 @@ namespace CallVehicle.Utilities
         {
             return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         }
+
+        public static Sprite SpriteFromImage(string fileName)
+        {
+            Texture2D texture = LoadCustomImage(fileName);
+            if (texture == null) return null;
+            return CreateSprite(texture);
+        }
     }
 }

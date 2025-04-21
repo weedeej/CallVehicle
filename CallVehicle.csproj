@@ -473,14 +473,13 @@
 	<ItemGroup>
 		<Compile Include="Core.cs" />
 		<Compile Include="Phone\AppUI.cs" />
-		<Compile Include="Phone\GenericApp.cs" />
-		<Compile Include="PhoneAppCreator.cs" />
+		<Compile Include="Phone\CallVehicleApp.cs" />
 		<Compile Include="Preferences.cs" />
 		<Compile Include="ModUtilities.cs" />
 		<Compile Include="VehicleController\VehicleControl.cs" />
 	</ItemGroup>
 	<PropertyGroup>
-		<S1Dir>D:\Program Files (x86)\Steam\steamapps\common\Schedule I - Copy</S1Dir>
+		<S1Dir>D:\Program Files (x86)\Steam\steamapps\common\Schedule I</S1Dir>
 		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
 	</PropertyGroup>
 	<ItemGroup>
@@ -488,6 +487,7 @@
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
+	  <PackageReference Include="Samboy063.Tomlet" Version="5.4.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<Publicize Include="Assembly-CSharp:ScheduleOne.UI.Phone.Awake.Start" />
