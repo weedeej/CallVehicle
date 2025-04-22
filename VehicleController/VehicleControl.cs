@@ -62,7 +62,6 @@ namespace CallVehicle.VehicleController
             vehicleAgent.Flags.StuckDetection = true;
             targetVehicle.POI.AutoUpdatePosition = true;
             vehicleAgent.Navigate(playerPos, new NavigationSettings { endAtRoad = true, teleportToGraphIfCalculationFails = true }, (result) => {
-                vehicleAgent.StopNavigating();
                 vehicleAgent.Flags.ResetFlags();
                 if (Preferences.GetPrefValue<bool>(PreferenceFields.BypassCheckpoints))
                     npc.ExitVehicle();
@@ -72,9 +71,11 @@ namespace CallVehicle.VehicleController
                 if (result == VehicleAgent.ENavigationResult.Failed)
                 {
                     npc.SendTextMessage($"Sorry boss, I couldn't find a route to you. You won't be charged for this.");
+                    vehicleAgent.StopNavigating();
                     return;
                 }
                 if (result != VehicleAgent.ENavigationResult.Complete) return;
+                vehicleAgent.StopNavigating();
                 bool useCash = Preferences.GetPrefValue<bool>(PreferenceFields.UseCash);
                 targetVehicle = null;
                 if (useCash)
