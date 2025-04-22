@@ -1,5 +1,6 @@
 ﻿using ScheduleOne.DevUtilities;
 using ScheduleOne.ItemFramework;
+using ScheduleOne.Map;
 using ScheduleOne.Money;
 using ScheduleOne.NPCs;
 using ScheduleOne.PlayerScripts;
@@ -60,10 +61,19 @@ namespace CallVehicle.VehicleController
             vehicleAgent.Flags.StuckDetection = true;
             targetVehicle.POI.AutoUpdatePosition = true;
             vehicleAgent.Navigate(playerPos, new NavigationSettings { endAtRoad = true, teleportToGraphIfCalculationFails = true }, (result) => {
-                bool useCash = Preferences.GetPrefValue<bool>(PreferenceFields.UseCash);
+                vehicleAgent.StopNavigating();
                 vehicleAgent.Flags.ResetFlags();
                 npc.ExitVehicle();
-                targetVehicle.SetIsPlayerOwned(player.Connection, true); // Working
+                targetVehicle.OverrideMaxSteerAngle(targetVehicle.ActualMaxSteeringAngle);
+                targetVehicle.SetIsPlayerOwned(player.Connection, true);
+                targetVehicle.POI.AutoUpdatePosition = false;
+                if (result == VehicleAgent.ENavigationResult.Failed)
+                {
+                    npc.SendTextMessage($"Sorry boss, I couldn't find a route to you. You won't be charged for this.");
+                    return;
+                }
+                if (result != VehicleAgent.ENavigationResult.Complete) return;
+                bool useCash = Preferences.GetPrefValue<bool>(PreferenceFields.UseCash);
                 targetVehicle = null;
                 if (useCash)
                 {
@@ -77,8 +87,6 @@ namespace CallVehicle.VehicleController
                 }
                 string paymentMethod = useCash ? "cash" : "online balance";
                 npc.SendTextMessage($"Vehicle Arrived. I've deducted ${cost} from your {paymentMethod}. Thank you for using my service.");
-                targetVehicle.OverrideMaxSteerAngle(targetVehicle.ActualMaxSteeringAngle);
-                vehicleAgent.StopNavigating();
             });
             // send otw message with vehicle color and name
             npc.SendTextMessage($"Your ({targetVehicle.OwnedColor}) {targetVehicle.VehicleName} is on the way.");
