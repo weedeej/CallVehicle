@@ -6,6 +6,7 @@ This mod introduces a new level of convenience to your gameplay by allowing you 
 
 * **Vehicle Summon:** Open your in-game phone and select the "Vehicle Summon" app. From there, you can choose any of your owned vehicles to be delivered to your current location.
 * **Intuitive Phone App Interface:** The in-game phone app is designed to be user-friendly and easy to navigate.
+* **Configurable:** Configure the fees, bypass checkpoints from the config file! (needs restarting)
 
 ## Installation
 
