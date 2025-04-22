@@ -57,13 +57,15 @@ namespace CallVehicle.VehicleController
             vehicleAgent.Flags.IgnoreTrafficLights = true;
             vehicleAgent.Flags.ObstacleMode = DriveFlags.EObstacleMode.IgnoreAll;
             targetVehicle.IsPlayerOwned = false;
-            npc.EnterVehicle(player.Connection, targetVehicle);
+            if (Preferences.GetPrefValue<bool>(PreferenceFields.BypassCheckpoints))
+                npc.EnterVehicle(player.Connection, targetVehicle);
             vehicleAgent.Flags.StuckDetection = true;
             targetVehicle.POI.AutoUpdatePosition = true;
             vehicleAgent.Navigate(playerPos, new NavigationSettings { endAtRoad = true, teleportToGraphIfCalculationFails = true }, (result) => {
                 vehicleAgent.StopNavigating();
                 vehicleAgent.Flags.ResetFlags();
-                npc.ExitVehicle();
+                if (Preferences.GetPrefValue<bool>(PreferenceFields.BypassCheckpoints))
+                    npc.ExitVehicle();
                 targetVehicle.OverrideMaxSteerAngle(targetVehicle.ActualMaxSteeringAngle);
                 targetVehicle.SetIsPlayerOwned(player.Connection, true);
                 targetVehicle.POI.AutoUpdatePosition = false;
@@ -78,8 +80,11 @@ namespace CallVehicle.VehicleController
                 if (useCash)
                 {
                     moneyManager.ChangeCashBalance(-cost, true, true);
-                    ItemInstance cash = moneyManager.GetCashInstance(cost);
-                    npc.Inventory.InsertItem(cash, true);
+                    if (Preferences.GetPrefValue<bool>(PreferenceFields.BypassCheckpoints))
+                    {
+                        ItemInstance cash = moneyManager.GetCashInstance(cost);
+                        npc.Inventory.InsertItem(cash, true);
+                    }
                 }
                 else
                 {

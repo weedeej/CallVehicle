@@ -11,6 +11,7 @@ public static class PreferenceFields
     public const string UseCash = "use_cash";
     public const string ServiceChargeDay = "service_charge_day";
     public const string ServiceChargeNight = "service_charge_night";
+    public const string BypassCheckpoints = "bypass_checkpoints";
 }
 
 namespace CallVehicle
@@ -43,6 +44,7 @@ namespace CallVehicle
             public PreferenceEntryDef use_cash;
             public PreferenceEntryDef service_charge_day;
             public PreferenceEntryDef service_charge_night;
+            public PreferenceEntryDef bypass_checkpoints;
         }
 
         // Static instance holding all default preference configurations.
@@ -51,7 +53,8 @@ namespace CallVehicle
             price_per_km = new PreferenceEntryDef() { id = PreferenceFields.PricePerKm, name = "Price per km", description = "The amount of cash/online balance to pay for the service per kilometer.", value = 13, type = typeof(int) },
             use_cash = new PreferenceEntryDef() { id = PreferenceFields.UseCash, name = "Use Cash", description = "Use cash instead of online balance. (true/false)", value = false, type = typeof(bool) },
             service_charge_day = new PreferenceEntryDef() { id = PreferenceFields.ServiceChargeDay, name = "Service Charge (Day)", description = "Flat fee for the service during the day.", value = 500, type = typeof(int) },
-            service_charge_night = new PreferenceEntryDef() { id = PreferenceFields.ServiceChargeNight, name = "Service Charge (Night)", description = "Flat fee for the service during the night.", value = 800, type = typeof(int) }
+            service_charge_night = new PreferenceEntryDef() { id = PreferenceFields.ServiceChargeNight, name = "Service Charge (Night)", description = "Flat fee for the service during the night.", value = 800, type = typeof(int) },
+            bypass_checkpoints = new PreferenceEntryDef() { id = PreferenceFields.BypassCheckpoints, name = "Bypass Checkpoints", description = "Should this mod bypasses the checkpoints?", value = true, type = typeof(bool) }
         };
 
         // Configuration file details
