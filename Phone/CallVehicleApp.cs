@@ -20,7 +20,7 @@ namespace CallVehicle.Phone
 
     public class CallVehicleApp : App<CallVehicleApp>
     {
-        private AppUI appUI;
+        private CallVehicleAppUI appUI;
 
         private EntryData? currentSelectedEntry = null;
         private Coroutine entriesUpdater;
@@ -181,7 +181,7 @@ namespace CallVehicle.Phone
 
             if (appContainer != null && appUI == null)
             {
-                appUI = new AppUI();
+                appUI = new CallVehicleAppUI();
 
                 Action<EntryData?> entrySelectedCallback = ShowOverview;
                 Action callVehicleCallback = OnCallVehicleClicked;

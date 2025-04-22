@@ -472,7 +472,7 @@
 
 	<ItemGroup>
 		<Compile Include="Core.cs" />
-		<Compile Include="Phone\AppUI.cs" />
+		<Compile Include="Phone\CallVehicleAppUI.cs" />
 		<Compile Include="Phone\CallVehicleApp.cs" />
 		<Compile Include="Preferences.cs" />
 		<Compile Include="ModUtilities.cs" />

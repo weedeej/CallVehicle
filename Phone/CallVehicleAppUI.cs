@@ -7,7 +7,7 @@ using ScheduleOne.DevUtilities;
 
 namespace CallVehicle.Phone
 {
-    public class AppUI
+    public class CallVehicleAppUI
     {
         private readonly Color bgColor = new Color32(45, 55, 72, 255);
         private readonly Color panelColor = new Color32(55, 65, 82, 255);
