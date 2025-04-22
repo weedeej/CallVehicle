@@ -286,7 +286,7 @@ namespace CallVehicle.Phone
             initialTextGO.transform.SetParent(initialLayout.transform, false);
 
             TextMeshProUGUI initialText = initialTextGO.AddComponent<TextMeshProUGUI>();
-            initialText.text = "Select an entry";
+            initialText.text = "Select an entry.\n\nIf your vehicle isn't moving, Consider moving away from it.";
             initialText.fontSize = 20;
             initialText.color = textColor;
 

@@ -1,4 +1,5 @@
 ﻿using ScheduleOne.DevUtilities;
+using ScheduleOne.ItemFramework;
 using ScheduleOne.Money;
 using ScheduleOne.NPCs;
 using ScheduleOne.PlayerScripts;
@@ -33,7 +34,7 @@ namespace CallVehicle.VehicleController
             // Scoped call
             LandVehicle targetVehicle = ownedVehicles.Find((veh) => veh.SaveFolderName == id);
             if (targetVehicle == null) return;
-            NPC npc = NPCManager.NPCRegistry.Find(n => n.FirstName == "Jeff");
+            NPC npc = NPCManager.NPCRegistry.Find(n => n.FirstName == "Marco");
             if (targetVehicle.Agent.AutoDriving)
             {
                 npc.SendTextMessage($"Sorry boss, I'm still driving your {targetVehicle.VehicleName}.");
@@ -67,6 +68,8 @@ namespace CallVehicle.VehicleController
                 if (useCash)
                 {
                     moneyManager.ChangeCashBalance(-cost, true, true);
+                    ItemInstance cash = moneyManager.GetCashInstance(cost);
+                    npc.Inventory.InsertItem(cash, true);
                 }
                 else
                 {
