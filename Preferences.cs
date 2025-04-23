@@ -12,6 +12,7 @@ public static class PreferenceFields
     public const string ServiceChargeDay = "service_charge_day";
     public const string ServiceChargeNight = "service_charge_night";
     public const string BypassCheckpoints = "bypass_checkpoints";
+    public const string AppPrice = "app_price";
 }
 
 namespace CallVehicle
@@ -45,6 +46,7 @@ namespace CallVehicle
             public PreferenceEntryDef service_charge_day;
             public PreferenceEntryDef service_charge_night;
             public PreferenceEntryDef bypass_checkpoints;
+            public PreferenceEntryDef app_price;
         }
 
         // Static instance holding all default preference configurations.
@@ -54,7 +56,8 @@ namespace CallVehicle
             use_cash = new PreferenceEntryDef() { id = PreferenceFields.UseCash, name = "Use Cash", description = "Use cash instead of online balance. (true/false)", value = false, type = typeof(bool) },
             service_charge_day = new PreferenceEntryDef() { id = PreferenceFields.ServiceChargeDay, name = "Service Charge (Day)", description = "Flat fee for the service during the day.", value = 500, type = typeof(int) },
             service_charge_night = new PreferenceEntryDef() { id = PreferenceFields.ServiceChargeNight, name = "Service Charge (Night)", description = "Flat fee for the service during the night.", value = 800, type = typeof(int) },
-            bypass_checkpoints = new PreferenceEntryDef() { id = PreferenceFields.BypassCheckpoints, name = "Bypass Checkpoints", description = "Should this mod bypasses the checkpoints?", value = true, type = typeof(bool) }
+            bypass_checkpoints = new PreferenceEntryDef() { id = PreferenceFields.BypassCheckpoints, name = "Bypass Checkpoints", description = "Should this mod bypasses the checkpoints?", value = true, type = typeof(bool) },
+            app_price = new PreferenceEntryDef() { id = PreferenceFields.AppPrice, name = "App Price", description = "The price of the app from Marco.", value = 5000, type = typeof(int) }
         };
 
         // Configuration file details
@@ -79,60 +82,40 @@ namespace CallVehicle
             category = MelonPreferences.GetCategory(ConfigCategoryName);
             if (category == null)
             {
-                Logger.Msg($"'{ConfigCategoryName}' category not found, creating...");
                 category = MelonPreferences.CreateCategory(ConfigCategoryName, "Call Vehicle Preferences");
-            }
-            else
-            {
-                Logger.Msg($"'{ConfigCategoryName}' category found.");
             }
 
             // Updated to use the recommended MelonEnvironment.UserDataDirectory instead of the obsolete MelonUtils.UserDataDirectory
             string filePath = Path.Combine(MelonEnvironment.UserDataDirectory, ConfigFileName);
-            Logger.Msg($"Expected config file path: {filePath}");
 
             // Set the file path for the category, disable auto-loading for manual control
             category.SetFilePath(filePath, autoload: false);
-            Logger.Msg($"Set category file path. Autoload disabled.");
 
             bool fileNeedsSaving = false;
 
             // Check if the configuration file exists
             if (!File.Exists(filePath))
             {
-                Logger.Warning($"Config file not found at '{filePath}'. Creating default entries.");
                 CreateDefaultEntries(); // Create all entries based on defaults
                 fileNeedsSaving = true; // Mark that the new file needs to be saved
             }
             else
             {
-                Logger.Msg($"Config file found. Loading entries from '{filePath}'...");
                 category.LoadFromFile(false); // Load existing file without saving immediately
-                Logger.Msg($"Loaded config file. Entry count before check: {category?.Entries.Count ?? -1}");
 
                 // Check if existing file has all necessary entries, add missing ones
                 if (CheckAndCreateMissingEntries())
                 {
-                    Logger.Msg($"Missing entries found and created in existing config.");
                     fileNeedsSaving = true; // Mark that the updated file needs saving
-                }
-                else
-                {
-                    Logger.Msg($"Existing config file contains all required entries.");
                 }
             }
 
             // Save the file only if new entries were created (either new file or added missing)
             if (fileNeedsSaving)
             {
-                Logger.Msg($"Saving preferences to '{filePath}'...");
                 category.SaveToFile(false); // Save changes without reloading
-                Logger.Msg($"Saved config file. Entry count after save: {category?.Entries.Count ?? -1}");
             }
-
-            // Final verification log
-            Logger.Msg($"'{ConfigCategoryName}' Preferences initialization complete.");
-            LogCurrentEntries();
+            Logger.Msg($"'{ConfigCategoryName}' preferences setup complete.");
         }
 
         /// <summary>
@@ -142,14 +125,12 @@ namespace CallVehicle
         private static void CreateDefaultEntries()
         {
             if (category == null) return;
-            Logger.Msg($"Creating default entries...");
             FieldInfo[] properties = typeof(DefaultPreferences).GetFields();
             foreach (var prop in properties)
             {
                 var entryValue = prop.GetValue(defaultPreferences);
                 if (entryValue is PreferenceEntryDef preference)
                 {
-                    Logger.Msg($" -> Creating entry: ID='{preference.id}', Name='{preference.name}', DefaultValue='{preference.value}'");
                     // Use the correct overload for CreateEntry based on the type
                     CreateEntryWithType(preference);
                 }
@@ -166,7 +147,6 @@ namespace CallVehicle
 
             bool entryAdded = false;
             FieldInfo[] properties = typeof(DefaultPreferences).GetFields();
-            Logger.Msg($"Checking for missing entries. Expecting {properties.Length}.");
 
             foreach (var prop in properties)
             {
@@ -175,7 +155,6 @@ namespace CallVehicle
                 {
                     if (!category.HasEntry(preference.id))
                     {
-                        Logger.Warning($" -> Missing entry found: ID='{preference.id}'. Creating with default value.");
                         CreateEntryWithType(preference);
                         entryAdded = true;
                     }
@@ -203,7 +182,6 @@ namespace CallVehicle
             else
             {
                 // Fallback or error for unsupported types
-                Logger.Error($"Unsupported preference type '{preference.type}' for entry '{preference.id}'. Using string fallback.");
                 category.CreateEntry<string>(preference.id, preference.value.ToString(), preference.name, preference.description);
             }
         }
@@ -219,13 +197,11 @@ namespace CallVehicle
         {
             if (category == null)
             {
-                Logger.Error($"Attempted to get preference '{key}' before Preferences.Setup() was called.");
                 return default(T);
             }
 
             if (!category.HasEntry(key))
             {
-                Logger.Warning($"Attempted to get non-existent preference entry: '{key}'. Returning default value for type {typeof(T)}.");
                 // Optionally, find and return the configured default value from defaultPreferences
                 return GetDefaultValue<T>(key);
             }
@@ -234,7 +210,6 @@ namespace CallVehicle
             if (entry == null)
             {
                 // This might happen if the type T doesn't match the stored type
-                Logger.Error($"Failed to get preference entry '{key}' with type {typeof(T)}. Stored type might differ. Returning default.");
                 // Attempt to get the boxed value and convert, or return default
                 var boxedEntry = category.GetEntry(key);
                 if (boxedEntry != null)
@@ -245,7 +220,6 @@ namespace CallVehicle
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error($"Conversion failed for '{key}': {ex.Message}");
                         return GetDefaultValue<T>(key); ;
                     }
                 }
@@ -266,20 +240,17 @@ namespace CallVehicle
         {
             if (category == null)
             {
-                Logger.Error($"Attempted to set preference '{key}' before Preferences.Setup() was called.");
                 return false;
             }
 
             if (!category.HasEntry(key))
             {
-                Logger.Warning($"Attempted to set non-existent preference entry: '{key}'. Cannot set value.");
                 return false;
             }
 
             var entry = category.GetEntry<T>(key);
             if (entry == null)
             {
-                Logger.Error($"Failed to get preference entry '{key}' with expected type {typeof(T)} for setting. Stored type might differ.");
                 // Optionally try GetEntry(key).BoxedValue = value; but it's less safe
                 return false;
             }
@@ -288,12 +259,10 @@ namespace CallVehicle
             {
                 entry.Value = value;
                 category.SaveToFile(false); // Save immediately after setting
-                Logger.Msg($"Set preference '{key}' to '{value}'. Saved.");
                 return true;
             }
             catch (Exception ex)
             {
-                Logger.Error($"Failed to set preference '{key}' with value '{value}': {ex.Message}");
                 return false;
             }
         }
@@ -316,33 +285,11 @@ namespace CallVehicle
                     }
                     catch (Exception ex)
                     {
-                        Logger?.Error($"Failed to convert default value for '{key}' to type {typeof(T)}: {ex.Message}");
                         return default(T); // Return default(T) on conversion error
                     }
                 }
             }
-            Logger?.Warning($"No default value definition found for key '{key}'.");
             return default(T); // Return default(T) if key not found in defaults
-        }
-
-
-        /// <summary>
-        /// Logs the current state of all entries in the category.
-        /// </summary>
-        private static void LogCurrentEntries()
-        {
-            if (category == null || Logger == null) return;
-
-            Logger.Msg($"Current '{ConfigCategoryName}' Entries ({category.Entries.Count}):");
-            if (category.Entries.Count == 0)
-            {
-                Logger.Msg(" -> No entries loaded.");
-                return;
-            }
-            foreach (var entry in category.Entries)
-            {
-                Logger.Msg($" -> ID: {entry.Identifier}, Type: {entry.GetReflectedType().Name}, Value: {entry.BoxedValue}");
-            }
         }
     }
 }
