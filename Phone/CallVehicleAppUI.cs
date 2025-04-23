@@ -174,18 +174,15 @@ namespace CallVehicle.Phone
                 scrollViewGO.transform.SetParent(parent, false);
 
                 Image scrollBg = scrollViewGO.AddComponent<Image>();
-                if (scrollBg == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add Image to scrollViewGO."); else scrollBg.color = panelColor;
-
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding Mask to scrollViewGO...");
+                if (scrollBg != null) scrollBg.color = panelColor;
                 Mask scrollMask = scrollViewGO.AddComponent<Mask>();
-                if (scrollMask == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add Mask to scrollViewGO."); else scrollMask.showMaskGraphic = false;
+                if (scrollMask != null) scrollMask.showMaskGraphic = false;
 
-                MelonLogger.Msg("AppUI: CreateLeftPanel - Adding LayoutElement to scrollViewGO...");
                 LayoutElement scrollLayout = scrollViewGO.AddComponent<LayoutElement>();
-                if (scrollLayout == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add LayoutElement to scrollViewGO."); else scrollLayout.flexibleWidth = 1;
+                if (scrollLayout != null) scrollLayout.flexibleWidth = 1;
 
                 listViewContentGO = new GameObject("ListViewContent");
-                if (listViewContentGO == null) { MelonLogger.Error("AppUI: CreateLeftPanel - listViewContentGO is NULL after creation!"); return; }
+                if (listViewContentGO == null) return;
 
                 contentRect = listViewContentGO.AddComponent<RectTransform>();
                 if (contentRect == null)
@@ -204,32 +201,25 @@ namespace CallVehicle.Phone
                 this.ListViewContent = listViewContentGO.transform;
                 listViewContentGO.transform.SetParent(scrollViewGO.transform, false);
                 VerticalLayoutGroup contentLayout = listViewContentGO.AddComponent<VerticalLayoutGroup>();
-                if (contentLayout == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add VerticalLayoutGroup to listViewContentGO.");
-                else
-                {
+                if (contentLayout != null) {
                     contentLayout.padding = new RectOffset(8, 8, 8, 8); contentLayout.spacing = 8;
                     contentLayout.childAlignment = TextAnchor.UpperCenter; contentLayout.childControlHeight = true;
                     contentLayout.childControlWidth = true; contentLayout.childForceExpandHeight = false;
                     contentLayout.childForceExpandWidth = true;
                 }
                 ContentSizeFitter sizeFitter = listViewContentGO.AddComponent<ContentSizeFitter>();
-                if (sizeFitter == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add ContentSizeFitter to listViewContentGO."); else sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                if (sizeFitter != null) sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
                 if (contentRect != null && scrollRectTransform != null)
                 {
                     this.ListScrollRect = scrollViewGO.AddComponent<ScrollRect>();
-                    if (this.ListScrollRect == null) MelonLogger.Warning("AppUI: CreateLeftPanel - Failed to add ScrollRect to scrollViewGO.");
-                    else
+                    if (this.ListScrollRect != null)
                     {
                         this.ListScrollRect.content = contentRect; 
                         this.ListScrollRect.viewport = scrollRectTransform; 
                         this.ListScrollRect.horizontal = false; this.ListScrollRect.vertical = true;
                         this.ListScrollRect.movementType = ScrollRect.MovementType.Clamped;
                     }
-                }
-                else
-                {
-                    MelonLogger.Error("AppUI: CreateLeftPanel - Cannot add ScrollRect because contentRect or scrollRectTransform is null!");
                 }
             }
             catch (Exception ex)
@@ -443,7 +433,6 @@ namespace CallVehicle.Phone
             if (ListViewContent == null)
             {
                 // Changed to Error for higher visibility
-                MelonLogger.Error("AppUI: Cannot clear list items, ListViewContent is null.");
                 return;
             }
 
@@ -468,7 +457,6 @@ namespace CallVehicle.Phone
         {
             if (ListViewContent == null)
             {
-                MelonLogger.Error($"AppUI: Cannot add list item '{entryData.Name}', ListViewContent is null.");
                 return;
             }
 
