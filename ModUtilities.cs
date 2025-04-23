@@ -1,8 +1,17 @@
-﻿using MelonLoader.Utils;
+﻿using MelonLoader;
+using MelonLoader.Utils;
+using ScheduleOne.Persistence.Loaders;
+using ScheduleOne.Persistence;
 using UnityEngine;
+using ScheduleOne.DevUtilities;
+using System.Reflection;
 
 namespace CallVehicle.Utilities
 {
+    public partial struct CallVehicleAppSaveData
+    {
+        public bool isPurchased;
+    }
     public static class ModUtilities
     {
 
@@ -26,6 +35,34 @@ namespace CallVehicle.Utilities
             Texture2D texture = LoadCustomImage(fileName);
             if (texture == null) return null;
             return CreateSprite(texture);
+        }
+
+        public static string GetFullSavePath()
+        {
+            new WaitUntil(() => Singleton<LoadManager>.Instance.LoadedGameFolderPath != null);
+            string savePath = Singleton<LoadManager>.Instance.LoadedGameFolderPath;
+            return Path.Combine(savePath, "CallVehicleAppStatus.json");
+        }
+
+        public static CallVehicleAppSaveData? GetLatestSaveData()
+        {
+            string fullSavePath = GetFullSavePath();
+            VariablesLoader loader = new VariablesLoader();
+            string content;
+            bool isLoaded = loader.TryLoadFile(fullSavePath, out content, false);
+            if (isLoaded)
+            {
+                CallVehicleAppSaveData app = JsonUtility.FromJson<CallVehicleAppSaveData>(content);
+                return app;
+            }
+            return null;
+        }
+
+        public static CallVehicleAppSaveData SaveModData(CallVehicleAppSaveData data)
+        {
+            string fullSavePath = GetFullSavePath();
+            File.WriteAllText(fullSavePath, JsonUtility.ToJson(data));
+            return data;
         }
     }
 }
