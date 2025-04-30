@@ -41,6 +41,16 @@ namespace CallVehicle.Utilities
         {
             new WaitUntil(() => Singleton<LoadManager>.Instance.LoadedGameFolderPath != null);
             string savePath = Singleton<LoadManager>.Instance.LoadedGameFolderPath;
+            string marker = @"\Saves\";
+            int markerIndex = savePath.IndexOf(marker);
+            if (markerIndex == -1) return null;
+            int startIndex = markerIndex + marker.Length;
+            savePath = Path.Combine(MelonEnvironment.UserDataDirectory, @$"Call Vehicle Data\{savePath.Substring(startIndex)}");
+            // Check if the directory exists, if not create it
+            if (!Directory.Exists(savePath))
+            {
+                Directory.CreateDirectory(savePath);
+            }
             return Path.Combine(savePath, "CallVehicleAppStatus.json");
         }
 
