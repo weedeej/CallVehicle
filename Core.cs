@@ -17,7 +17,6 @@ namespace CallVehicle
 {
     public class Core : MelonMod
     {
-
         public override void OnInitializeMelon()
         {
             Preferences.Setup(LoggerInstance);

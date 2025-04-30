@@ -13,7 +13,29 @@ This mod introduces a new level of convenience to your gameplay by allowing you 
 1.  **Prerequisites:** Ensure you have the base game's alternate branch (mono) installed and [Melon Loader](https://melonwiki.xyz/). Please refer to the specific requirements for your game.
 2.  **Download:** Download the latest version of the mod from [releases](https://github.com/weedeej/CallVehicle/releases/latest).
 3.  **Installation:** Extract the downloaded files into your game's root directory.
+4.  **Phone App:** Purchase the application from Marco.
+	1. 
+## Configuration
 
+You can configure this mod from `<Schedule One Directory>/UserData/ChauffeurPrefs.cfg` (Requires game restart)
+
+Default Config:
+
+```
+[CallVehicle]
+# The amount of cash/online balance to pay for the service per kilometer.
+price_per_km = 14
+# Use cash instead of online balance. (true/false)
+use_cash = false
+# Flat fee for the service during the day.
+service_charge_day = 500
+# Flat fee for the service during the night.
+service_charge_night = 800
+# Should this mod bypasses the checkpoints?
+bypass_checkpoints = true
+# The price of the app from Marco.
+app_price = 5000
+```
 ## Screenshots/Videos
 
 ![image](https://github.com/user-attachments/assets/875b792c-3e51-4e9d-8fd5-807411ac7879)
