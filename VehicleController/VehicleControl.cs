@@ -1,4 +1,5 @@
-﻿using ScheduleOne.DevUtilities;
+﻿using MelonLoader;
+using ScheduleOne.DevUtilities;
 using ScheduleOne.ItemFramework;
 using ScheduleOne.Map;
 using ScheduleOne.Money;
@@ -19,7 +20,7 @@ namespace CallVehicle.VehicleController
         public VehicleControl(string id)
         {
             player = Player.Local;
-            ownedVehicles = NetworkSingleton<VehicleManager>.Instance.PlayerOwnedVehicles.Where((veh) => veh.IsOwner).ToList();
+            ownedVehicles = NetworkSingleton<VehicleManager>.Instance.PlayerOwnedVehicles;
             if (ownedVehicles.Count > 0)
                 targetVehicle = ownedVehicles.Find((veh) => veh.SaveFolderName == id);
         }
@@ -27,7 +28,7 @@ namespace CallVehicle.VehicleController
         public VehicleControl()
         {
             player = Player.Local;
-            ownedVehicles = NetworkSingleton<VehicleManager>.Instance.PlayerOwnedVehicles.Where((veh) => veh.IsOwner).ToList();
+            ownedVehicles = NetworkSingleton<VehicleManager>.Instance.PlayerOwnedVehicles;
         }
 
         public void CallVehicle(string id, int cost)

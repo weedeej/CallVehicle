@@ -10,7 +10,7 @@ using System.Collections;
 using UnityEngine;
 using static ScheduleOne.Dialogue.DialogueController;
 
-[assembly: MelonInfo(typeof(CallVehicle.Core), "CallVehicle", "1.0.0", "Dixie")]
+[assembly: MelonInfo(typeof(CallVehicle.Core), "CallVehicle", "1.1.2", "weedeej")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace CallVehicle
